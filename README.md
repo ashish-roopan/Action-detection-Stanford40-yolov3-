@@ -2,7 +2,7 @@
 
 ---
 
-## Using YOLO to detect object from an image
+## Using YOLO to detect an action from an image or vedio
 
 - Download YOLOv3 weights from [YOLO website](http://pjreddie.com/darknet/yolo/).
 - Convert the Darknet YOLO model to a Keras model.
