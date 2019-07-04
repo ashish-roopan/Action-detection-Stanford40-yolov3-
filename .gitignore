@@ -1,8 +1,8 @@
+logs
 Stanford40
 VOC2012
 yolov3.weights
-model_data/yolo_weights.h5
-
+model_data
 
 
 *.jpg

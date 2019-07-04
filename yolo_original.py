@@ -18,19 +18,12 @@ from yolo3.utils import letterbox_image
 import os
 from keras.utils import multi_gpu_model
 
-def detection_result(label,left,top,right,bottom,file_name):
-
-        dr_text_file=open('./mAP/input/detection-results/'+file_name.split('.')[0]+'.txt', 'a+')
-
-        dr_text_file.write(label+' '+str(left)+ ' ' +str(top)+ " "+str(right)+' '+str(bottom)+'\n')
-        dr_text_file.close()
-
 class YOLO(object):
     _defaults = {
         "model_path": 'model_data/trained_weights_final (1).h5',
         "anchors_path": 'model_data/yolo_anchors.txt',
         "classes_path": 'model_data/voc_classes.txt',
-        "score" : 0.2,
+        "score" : 0.3,
         "iou" : 0.45,
         "model_image_size" : (416, 416),
         "gpu_num" : 1,
@@ -50,7 +43,6 @@ class YOLO(object):
         self.anchors = self._get_anchors()
         self.sess = K.get_session()
         self.boxes, self.scores, self.classes = self.generate()
-
 
     def _get_class(self):
         classes_path = os.path.expanduser(self.classes_path)
@@ -107,10 +99,7 @@ class YOLO(object):
                 score_threshold=self.score, iou_threshold=self.iou)
         return boxes, scores, classes
 
-
-
-
-    def detect_image(self, image,filename):
+    def detect_image(self, image):
         start = timer()
 
         if self.model_image_size != (None, None):
@@ -157,8 +146,6 @@ class YOLO(object):
             right = min(image.size[0], np.floor(right + 0.5).astype('int32'))
             print(label, (left, top), (right, bottom))
 
-            detection_result(label,left,top,right,bottom,filename)
-
             if top - label_size[1] >= 0:
                 text_origin = np.array([left, top - label_size[1]])
             else:
@@ -176,9 +163,7 @@ class YOLO(object):
             del draw
 
         end = timer()
-        #print(end - start)
-        #dr_text_file.close()
-
+        print(end - start)
         return image
 
     def close_session(self):

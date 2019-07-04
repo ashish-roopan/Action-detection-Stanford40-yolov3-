@@ -2,24 +2,43 @@ import sys
 import argparse
 from yolo_original import YOLO, detect_video
 from PIL import Image
+from glob import glob
+import os
 import cv2
+import numpy as np
 
 def detect_img(yolo):
-        while True:
-            img = input('Input image filename:')
+
+        #cap = cv2.VideoCapture(0)
+
+        #while(True):
+                #ret, image = cap.read()
+        for filename in os.listdir('./Stanford40/delete_this/'):
+            print(filename)
+            img='Stanford40/delete_this/'+filename
             try:
                 image = Image.open(img)
+
             except:
                 print('Open Error! Try again!')
-                continue
+                #continue
             else:
+
                 r_image = yolo.detect_image(image)
-                r_image.show()
+                #r_image.show()
+                img=np.array(r_image)
+                img=cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                cv2.imshow('img',img)
+                q=cv2.waitKey(0)
+                if q==ord('9'):
+                    break
         yolo.close_session()
+        cv2.destroyAllWindows()
 
 FLAGS = None
 
 if __name__ == '__main__':
+
     # class YOLO defines the default value, so suppress any default here
     parser = argparse.ArgumentParser(argument_default=argparse.SUPPRESS)
     '''
@@ -63,6 +82,7 @@ if __name__ == '__main__':
     )
 
     FLAGS = parser.parse_args()
+    print(FLAGS)
 
     if FLAGS.image:
         """
